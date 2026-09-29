@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Приглашение в чат бригады — Мой рейс</title>
+<meta property="og:title" content="Приглашение в чат бригады">
+<meta property="og:description" content="Откройте ссылку, чтобы вступить в чат в приложении «Мой рейс»">
+<style>
+  :root { --bg:#0e1a2b; --card:#16263d; --text:#e8eef7; --muted:#9fb0c7; --accent:#1055c9; --rail:#2f7bf0; --line:#2c4262; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); color:var(--text); padding:24px;
+         font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  .card { width:100%; max-width:420px; background:var(--card); border-radius:20px; padding:28px 24px; }
+  .rail { height:6px; border-radius:3px; margin-bottom:24px;
+          background:repeating-linear-gradient(90deg,var(--rail) 0 18px,transparent 18px 28px); }
+  h1 { font-size:22px; line-height:1.25; margin:0 0 10px; }
+  p { color:var(--muted); line-height:1.5; margin:0 0 20px; }
+  .btn { display:block; width:100%; text-align:center; padding:15px; border-radius:12px; font:inherit;
+         font-size:16px; font-weight:600; text-decoration:none; cursor:pointer; margin-bottom:12px; }
+  .primary { background:var(--accent); color:#fff; border:0; }
+  .secondary { background:transparent; color:var(--text); border:1px solid var(--line); }
+  .note { font-size:14px; }
+  .code { font-family:ui-monospace,Consolas,monospace; background:var(--bg); padding:10px 12px;
+          border-radius:10px; word-break:break-all; margin:6px 0 0; }
+  .warn { color:#ffcf70; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="rail"></div>
+
+  <section id="ok">
+    <h1>Вас пригласили в чат бригады</h1>
+    <p id="lead">Чат работает в приложении «Мой рейс». Если оно установлено, откройте приглашение в нём.</p>
+    <a id="open" class="btn primary" href="#">Открыть в приложении</a>
+    <button id="install" class="btn secondary" type="button">Установить приложение</button>
+    <p class="note">После установки откройте «Мой рейс» — приложение само предложит вступить в чат.
+      Если не предложит: Меню → Чаты бригады → Вступить по коду.</p>
+    <div class="note">Код приглашения:</div>
+    <div id="code" class="code"></div>
+  </section>
+
+  <section id="bad" class="hidden">
+    <h1>Ссылка не распознана</h1>
+    <p>Попросите начальника поезда отправить приглашение ещё раз.</p>
+  </section>
+</main>
+
+<script>
+  // Куда вести на установку. После публикации в RuStore заменить на ссылку RuStore.
+  const APK_URL = '/moireis.apk';
+  const PKG = 'ru.petrk1.moireis';
+
+  const params = new URLSearchParams(location.search);
+  const code = (params.get('c') || '').toLowerCase();
+  const $ = (id) => document.getElementById(id);
+
+  if (!/^[a-z0-9]{15}$/.test(code)) {
+    $('ok').classList.add('hidden');
+    $('bad').classList.remove('hidden');
+  } else {
+    $('code').textContent = code;
+
+    // Если приложение есть — откроется оно, если нет — вернёмся сюда с пометкой noapp.
+    const fallback = location.origin + '/?c=' + code + '&noapp=1';
+    $('open').href = 'intent://join.petrk1.ru/?c=' + code +
+      '#Intent;scheme=https;package=' + PKG +
+      ';S.browser_fallback_url=' + encodeURIComponent(fallback) + ';end';
+
+    if (params.get('noapp')) {
+      $('lead').textContent = 'Похоже, приложение ещё не установлено. Установите его — после первого запуска оно само предложит вступить в чат.';
+      $('lead').classList.add('warn');
+      $('install').className = 'btn primary';
+      $('open').className = 'btn secondary';
+    }
+
+    // Копируем приглашение: приложение найдёт его в буфере при первом запуске.
+    $('install').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText('Приглашение в чат «Мой рейс». Код: ' + code);
+      } catch (e) {}
+      location.href = APK_URL;
+    });
+  }
+</script>
+</body>
+</html>
