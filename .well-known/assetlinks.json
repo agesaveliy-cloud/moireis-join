@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ru.petrk1.moireis",
+      "sha256_cert_fingerprints": [
+        "5E:72:9D:8B:49:31:52:0A:13:2D:C2:4A:76:02:B9:90:2B:D5:9F:9B:11:0A:48:D7:BC:28:D0:DB:FA:98:5D:56"
+      ]
+    }
+  }
+]
