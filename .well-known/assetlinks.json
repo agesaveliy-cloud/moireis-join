@@ -5,7 +5,8 @@
       "namespace": "android_app",
       "package_name": "ru.petrk1.moireis",
       "sha256_cert_fingerprints": [
-        "5E:72:9D:8B:49:31:52:0A:13:2D:C2:4A:76:02:B9:90:2B:D5:9F:9B:11:0A:48:D7:BC:28:D0:DB:FA:98:5D:56"
+        "5E:72:9D:8B:49:31:52:0A:13:2D:C2:4A:76:02:B9:90:2B:D5:9F:9B:11:0A:48:D7:BC:28:D0:DB:FA:98:5D:56",
+        "20:FB:95:BE:BC:77:E4:C6:C4:C5:6A:60:49:44:A1:28:29:73:B8:45:B4:05:20:CF:2F:82:FF:F1:C4:9E:2F:AF"
       ]
     }
   }
